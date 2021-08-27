@@ -16,34 +16,28 @@ app.get("/", (request, response) => response.send("Your doing great"));
 
 //----------------Search Query----------------------------
 app.get("/weather", (request, response) => {
-  const searchCity = request.query.searchQuery;
+   const searchCity = request.query.searchQuery;
   console.log(request.query);
 
   const cityFound = data.find((city) => {
-    return searchCity === city.city_name;
+    return searchCity.toLowerCase() === city.city_name.toLowerCase();
   });
 
-  const weatherFound = cityFound.data.map((weather) => {
-    const date = weather.datetime;
-    const low_temp = weather.low_temp;
-    const high_temp = weather.high_temp;
-    const description = weather.weather.description;
-    return new Forecast(`low of ${low_temp}, high of ${high_temp} with ${description}`,date);
-
-    // return [
-    //   `description: low of ${low_temp}, high of ${high_temp} with ${description}, date: ${date}`,
-    // ];
-
-  });
-
-  response.send(weatherFound);
+  try{
+    const weatherFound = cityFound.data.map((day) => new Forecast(day)); 
+    response.send(weatherFound); 
+  }
+  catch (error) {
+    console.error('error from api', error);
+    response.status(500).send('server error');
+  }
 //   response.send(cityFound);
 });
 
 class Forecast {
-  constructor(description, date) {
-    this.description = description;
-    this.date = date;
+  constructor(day) {
+    this.description = `low of ${day.low_temp}, high of ${day.high_temp} with ${day.weather.description}`;
+    this.date = day.datetime;
   }
 }
 
