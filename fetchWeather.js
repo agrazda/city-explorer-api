@@ -7,7 +7,7 @@ async function fetchWeather(request, response) {
 console.log(lat, lon)
 try {
   const cityFound = await axios.get(
-    `https://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_API_KEY}&lang=en&lat=${lat}&lon=${lon}&days=5`
+    `https://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_API_KEY}&lang=en&lat=${lat}&lon=${lon}&days=3`
   );
   console.log(cityFound.data.data);
   
